@@ -10,9 +10,14 @@ android {
     targetSdkVersion 23
     versionCode 1
     versionName '1.0.0'
+
+    testInstrumentationRunner 'com.sqisland.espresso.battery.MockTestRunner'
   }
 
   buildTypes {
+    debug {
+      testCoverageEnabled true
+    }
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -20,6 +25,29 @@ android {
   }
 }
 
+final SUPPORT_LIB_VERSION = '23.1.1'
+final DEXMAKER_VERSION = '1.2'
+final RUNNER_VERSION = '0.4'
+final ESPRESSO_VERSION = '2.2.1'
+final MOCKITO_VERSION = '1.10.19'
+
 dependencies {
-  compile 'com.android.support:appcompat-v7:23.1.1'
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+
+  androidTestCompile "com.android.support.test:runner:${RUNNER_VERSION}"
+  androidTestCompile "com.android.support.test:rules:${RUNNER_VERSION}"
+  androidTestCompile "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+  androidTestCompile "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
+  androidTestCompile "com.google.dexmaker:dexmaker:${DEXMAKER_VERSION}"
+  androidTestCompile "com.google.dexmaker:dexmaker-mockito:${DEXMAKER_VERSION}"
+  androidTestCompile "org.mockito:mockito-core:${MOCKITO_VERSION}"
+}
+
+
+/*
+Resolves dependency versions across test and production APKs, specifically, transitive
+dependencies. This is required since Espresso internally has a dependency on support-annotations.
+*/
+configurations.all {
+  resolutionStrategy.force "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 }
