@@ -1,0 +1,4 @@
+<resources>
+  <string name="app_name">Battery Status</string>
+  <string name="percentage">%.0f%%</string>
+</resources>
