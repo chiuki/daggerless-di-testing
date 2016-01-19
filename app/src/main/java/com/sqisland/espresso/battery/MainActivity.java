@@ -1,8 +1,5 @@
 package com.sqisland.espresso.battery;
 
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +8,8 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
   private TextView batteryView;
+
+  private BatteryReader batteryReader;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         refresh();
       }
     });
+    batteryReader = new BatteryReader(this);
   }
 
   @Override
@@ -32,23 +32,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void refresh() {
-    float percent = getBatteryPercent();
+    float percent = batteryReader.getBatteryPercent();
 
     batteryView.setText(getString(R.string.percentage, percent));
 
     int color = ContextCompat.getColor(
         this, percent > 15f ? R.color.battery_ok : R.color.battery_low);
     batteryView.setTextColor(color);
-  }
-
-  private float getBatteryPercent() {
-    IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-    Intent batteryStatus = registerReceiver(null, intentFilter);
-    if (batteryStatus == null) {
-      return 0;
-    }
-    int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-    int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
-    return level * 100f / scale;
   }
 }
