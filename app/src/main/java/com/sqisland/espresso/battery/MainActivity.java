@@ -23,6 +23,15 @@ public class MainActivity extends AppCompatActivity {
       }
     });
     batteryReader = new BatteryReader(this);
+
+    inject();
+  }
+
+  private void inject() {
+    DemoApplication application = (DemoApplication) getApplication();
+    Injection injection = application.getInjection();
+
+    batteryReader = injection.provideBatteryReader();
   }
 
   @Override
