@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         refresh();
       }
     });
-    batteryReader = new BatteryReader(this);
 
     inject();
   }
