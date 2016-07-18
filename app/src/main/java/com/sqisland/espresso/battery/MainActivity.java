@@ -7,46 +7,44 @@ import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-  private TextView batteryView;
+    private TextView batteryView;
 
-  private BatteryReader batteryReader;
+    protected BatteryReader batteryReader;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-    batteryView = (TextView) findViewById(R.id.battery);
-    batteryView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        batteryView = (TextView) findViewById(R.id.battery);
+        batteryView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refresh();
+            }
+        });
+
+        inject();
+    }
+
+    private void inject() {
+        DemoApplication application = (DemoApplication) getApplication();
+        Injection injection = application.getInjection();
+        injection.inject(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         refresh();
-      }
-    });
-    batteryReader = new BatteryReader(this);
+    }
 
-    inject();
-  }
+    private void refresh() {
+        float percent = batteryReader.getBatteryPercent();
 
-  private void inject() {
-    DemoApplication application = (DemoApplication) getApplication();
-    Injection injection = application.getInjection();
+        batteryView.setText(getString(R.string.percentage, percent));
 
-    batteryReader = injection.provideBatteryReader();
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    refresh();
-  }
-
-  private void refresh() {
-    float percent = batteryReader.getBatteryPercent();
-
-    batteryView.setText(getString(R.string.percentage, percent));
-
-    int color = ContextCompat.getColor(
-        this, percent > 15f ? R.color.battery_ok : R.color.battery_low);
-    batteryView.setTextColor(color);
-  }
+        int color = ContextCompat.getColor(
+                this, percent > 15f ? R.color.battery_ok : R.color.battery_low);
+        batteryView.setTextColor(color);
+    }
 }
