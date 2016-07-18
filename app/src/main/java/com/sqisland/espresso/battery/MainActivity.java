@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
   private TextView batteryView;
 
-  private BatteryReader batteryReader;
+  protected BatteryReader batteryReader;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         refresh();
       }
     });
-    batteryReader = new BatteryReader(this);
 
     inject();
   }
@@ -30,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
   private void inject() {
     DemoApplication application = (DemoApplication) getApplication();
     Injection injection = application.getInjection();
-
-    batteryReader = injection.provideBatteryReader();
+    injection.inject(this);
   }
 
   @Override

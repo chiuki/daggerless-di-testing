@@ -5,6 +5,7 @@ import org.mockito.Mockito;
 public class MockInjection extends Injection {
   public MockInjection() {
     super(null);
+    addInjector(MainActivityTest.class, new MockInjector());
   }
 
   @Override
