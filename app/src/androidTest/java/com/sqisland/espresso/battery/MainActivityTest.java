@@ -27,7 +27,7 @@ public class MainActivityTest {
       true,     // initialTouchMode
       false);   // launchActivity. False so we can set up mocks per test method
 
-  private BatteryReader batteryReader;
+  protected BatteryReader batteryReader;
 
   @Before
   public void setUp() throws Exception {
@@ -35,7 +35,7 @@ public class MainActivityTest {
     MockDemoApplication app
         = (MockDemoApplication) instrumentation.getTargetContext().getApplicationContext();
     Injection injection = app.getInjection();
-    batteryReader = injection.provideBatteryReader();
+    injection.inject(this);
     Mockito.reset(batteryReader);
   }
 
